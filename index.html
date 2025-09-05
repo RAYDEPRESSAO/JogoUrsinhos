@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jogo de Contar Ursos</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#87CEEB" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Jogo dos Ursos" />
+    <link rel="manifest" href="manifest.json" />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Press Start 2P", "VT323", "Courier New", monospace;
+        background: linear-gradient(135deg, #87ceeb, #98fb98, #ffb6c1);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        overflow-x: auto;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .game-container {
+        max-width: 100%;
+        width: 100%;
+        max-height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        grid-template-rows: auto auto 1fr auto auto;
+        grid-template-areas:
+          "header header"
+          "score score"
+          "bears options"
+          "question question"
+          "feedback feedback"
+          "next next";
+        gap: 15px;
+        align-items: center;
+      }
+
+      h1 {
+        grid-area: header;
+        color: #ff6b35;
+        font-size: 18px;
+        margin: 0;
+        text-shadow: 2px 2px 0px #000;
+        font-family: "Press Start 2P", "VT323", "Courier New", monospace;
+      }
+
+      .score {
+        grid-area: score;
+        font-size: 14px;
+        color: #2e8b57;
+        margin: 0;
+        font-weight: normal;
+        text-shadow: 1px 1px 0px #000;
+        font-family: "Press Start 2P", "VT323", "Courier New", monospace;
+      }
+
+      .bears-area {
+        grid-area: bears;
+        min-height: 200px;
+        height: 100%;
+        background: rgba(144, 238, 144, 0.4);
+        border: 3px dashed #228b22;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .bear {
+        width: 70px;
+        height: 70px;
+        background-image: url("ursinho-contagem.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+        animation: bounceIn 0.8s ease-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .question {
+        grid-area: question;
+        font-size: 16px;
+        color: #4b0082;
+        margin: 0;
+        font-weight: normal;
+        text-shadow: 1px 1px 0px #fff;
+        font-family: "Press Start 2P", "VT323", "Courier New", monospace;
+      }
+
+      .options {
+        grid-area: options;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 20px;
+        width: 280px;
+        height: 280px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .option-btn {
+        width: 100%;
+        height: 100%;
+        min-height: 120px;
+        border: 6px solid #ff6347;
+        border-radius: 25px;
+        background: linear-gradient(145deg, #ffd700, #ffa500);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+      }
+
+      .option-btn:hover,
+      .option-btn:active {
+        transform: scale(1.05);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(145deg, #ffa500, #ff6347);
+      }
+
+      .option-btn.correct {
+        background: linear-gradient(145deg, #90ee90, #32cd32);
+        border-color: #228b22;
+        animation: correctAnswer 0.8s ease;
+      }
+
+      .option-btn.incorrect {
+        background: linear-gradient(145deg, #ffb6c1, #ff69b4);
+        border-color: #dc143c;
+        animation: shake 0.5s ease;
+      }
+
+      @keyframes correctAnswer {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .feedback {
+        grid-area: feedback;
+        font-size: 13px;
+        margin: 0;
+        font-weight: normal;
+        min-height: 30px;
+        text-shadow: 1px 1px 0px #000;
+        font-family: "Press Start 2P", "VT323", "Courier New", monospace;
+      }
+
+      .feedback.correct {
+        color: #228b22;
+      }
+
+      .feedback.incorrect {
+        color: #dc143c;
+      }
+
+      .next-btn {
+        grid-area: next;
+        font-size: 1.2em;
+        padding: 15px 30px;
+        background: linear-gradient(145deg, #87ceeb, #4682b4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-family: Arial, sans-serif;
+      }
+
+      .next-btn:hover {
+        background: linear-gradient(145deg, #4682b4, #1e90ff);
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .next-btn:disabled {
+        background: #666;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.7;
+      }
+
+      .celebration {
+        display: none;
+        font-size: 24px;
+        animation: celebration 1s ease-in-out infinite;
+        text-shadow: 2px 2px 0px #000;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+      }
+
+      @keyframes celebration {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+      }
+
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Ajustes para telas pequenas em modo retrato */
+      @media (orientation: portrait) {
+        .game-container {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "header"
+            "score"
+            "bears"
+            "question"
+            "options"
+            "feedback"
+            "next";
+        }
+
+        .options {
+          width: 100%;
+          max-width: 300px;
+          height: auto;
+        }
+
+        .option-btn {
+          min-height: 80px;
+        }
+
+        .bears-area {
+          min-height: 150px;
+        }
+
+        .bear {
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      /* Específico para telas muito pequenas */
+      @media (max-width: 480px) {
+        .game-container {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 14px;
+        }
+
+        .bear {
+          width: 45px;
+          height: 45px;
+        }
+
+        .option-btn {
+          min-height: 70px;
+          border-width: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>🐻 Conte os Ursinhos! 🐻</h1>
+      <div class="score">Pontuação: <span id="score">0</span></div>
+
+      <div class="bears-area" id="bearsArea"></div>
+
+      <div class="question" id="question">Quantos ursinhos você vê?</div>
+
+      <div class="options" id="options"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <button class="next-btn" id="nextBtn" onclick="nextRound()" disabled>
+        Próxima Pergunta
+      </button>
+
+      <div class="celebration" id="celebration">🎉 Parabéns! 🎉</div>
+    </div>
+
+    <script>
+      let currentBearCount = 0;
+      let score = 0;
+      let gameRound = 1;
+      let answered = false;
+
+      function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function createBears(count) {
+        const bearsArea = document.getElementById("bearsArea");
+        bearsArea.innerHTML = "";
+
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const bear = document.createElement("div");
+            bear.className = "bear";
+            bearsArea.appendChild(bear);
+          }, i * 200);
+        }
+      }
+
+      function generateOptions(correctAnswer) {
+        const options = [correctAnswer];
+        const maxNumber = Math.max(10, correctAnswer + 3);
+
+        while (options.length < 4) {
+          const option = generateRandomNumber(1, maxNumber);
+          if (!options.includes(option)) {
+            options.push(option);
+          }
+        }
+
+        // Embaralhar as opções
+        for (let i = options.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [options[i], options[j]] = [options[j], options[i]];
+        }
+
+        return options;
+      }
+
+      function createOptionButtons(options, correctAnswer) {
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+
+        options.forEach((option) => {
+          const button = document.createElement("button");
+          button.className = "option-btn";
+          // Define a imagem do número como background
+          button.style.backgroundImage = `url('numero_${option}.png')`;
+          button.onclick = () => checkAnswer(option, correctAnswer, button);
+          optionsContainer.appendChild(button);
+        });
+      }
+
+      function checkAnswer(selectedAnswer, correctAnswer, button) {
+        if (answered) return;
+
+        answered = true;
+        const feedback = document.getElementById("feedback");
+        const nextBtn = document.getElementById("nextBtn");
+        const celebration = document.getElementById("celebration");
+
+        if (selectedAnswer === correctAnswer) {
+          button.classList.add("correct");
+          feedback.textContent = "Muito bem! Você acertou! 🎉";
+          feedback.className = "feedback correct";
+          score += 10;
+          document.getElementById("score").textContent = score;
+          celebration.style.display = "block";
+          setTimeout(() => {
+            celebration.style.display = "none";
+          }, 2000);
+        } else {
+          button.classList.add("incorrect");
+          feedback.textContent = `Ops! A resposta certa era ${correctAnswer}. Tente novamente! 💪`;
+          feedback.className = "feedback incorrect";
+
+          // Destacar a resposta correta
+          const allButtons = document.querySelectorAll(".option-btn");
+          allButtons.forEach((btn) => {
+            if (parseInt(btn.textContent) === correctAnswer) {
+              btn.classList.add("correct");
+            }
+          });
+        }
+
+        nextBtn.disabled = false;
+      }
+
+      function startGame() {
+        score = 0;
+        gameRound = 1;
+        document.getElementById("score").textContent = score;
+        // Começar com números menores para crianças de 18+ meses
+        currentBearCount = generateRandomNumber(1, 3);
+        nextRound();
+      }
+
+      function nextRound() {
+        answered = false;
+        gameRound++;
+
+        // Progressão gradual: começar com 1-3, depois 1-5, depois 1-8
+        let maxBears;
+        if (gameRound <= 5) {
+          maxBears = 3; // Primeiras 5 rodadas: 1 a 3 ursos
+        } else if (gameRound <= 10) {
+          maxBears = 5; // Próximas 5 rodadas: 1 a 5 ursos
+        } else {
+          maxBears = 8; // Depois: 1 a 8 ursos
+        }
+
+        // Gerar número de ursos
+        currentBearCount = generateRandomNumber(1, maxBears);
+
+        // Criar ursos
+        createBears(currentBearCount);
+
+        // Gerar opções
+        const options = generateOptions(currentBearCount);
+        createOptionButtons(options, currentBearCount);
+
+        // Limpar feedback
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("nextBtn").disabled = true;
+      }
+
+      // Iniciar o jogo
+      startGame();
+
+      // Registrar Service Worker para PWA
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("service-worker.js")
+            .then(function (registration) {
+              console.log("SW registrado com sucesso: ", registration.scope);
+            })
+            .catch(function (registrationError) {
+              console.log("SW falhou ao registrar: ", registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
