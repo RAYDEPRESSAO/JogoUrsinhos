@@ -3,27 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jogo de Contar Ursos</title>
-
+    <title>Ursinhos no reino da matemática</title>
+  </head>
+  <body>
+    <main>
+      <h1 class="titulo_principal rainbow-text-animated">
+        Ursinhos no reino da matmática
+      </h1>
+      <section class="tutoriais">
+        <p class="tutorial_texto">Tutoriais</p>
+        <div class="box_botões">
+          <a href="" class="botões amarelo">Contagem</a>
+          <a href="" class="botões vermelho">Adição</a>
+          <a href="" class="botões azul">Subtração</a>
+        </div>
+      </section>
+      <a href="contagem.html" class="botões">Jogar</a>
+    </main>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-      @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
-
-      * {
+      html,
+      body {
+        height: 100%;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
       }
 
       body {
         font-family: "Press Start 2P", "VT323", monospace;
         background: linear-gradient(135deg, #87ceeb, #98fb98, #ffb6c1);
-        background-size: 400% 400%;
+        background-size: 200% 200%; /* ou 300% 300% se quiser um movimento mais suave */
         animation: gradientShift 8s ease infinite;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         padding: 10px;
       }
 
@@ -38,309 +48,66 @@
           background-position: 0% 50%;
         }
       }
-
-      .game-container {
-        width: 800px;
-        max-width: 100%;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 20px;
+      .titulo_principal {
+        font-size: 28px;
+        gap: 1px;
+        padding: 1em;
         text-align: center;
-        display: grid;
-        grid-template-columns: 1fr 300px;
-        grid-template-rows: auto auto 1fr auto auto;
-        grid-template-areas:
-          "header header"
-          "score score"
-          "bears options"
-          "question question"
-          "feedback feedback"
-          "next next";
-        gap: 15px;
-        align-items: center;
+      }
+      .rainbow-text-animated {
+        background: linear-gradient(
+          270deg,
+          red,
+          orange,
+          yellow,
+          green,
+          blue,
+          indigo,
+          violet
+        );
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        animation: rainbowMove 8s ease infinite;
       }
 
-      h1 {
-        grid-area: header;
-        color: #ff6b35;
-        font-size: 18px;
-        text-shadow: 2px 2px 0px #000;
-      }
-
-      .score {
-        grid-area: score;
-        font-size: 14px;
-        color: #2e8b57;
-        text-shadow: 1px 1px 0px #000;
-      }
-
-      .bears-area {
-        grid-area: bears;
-        min-height: 200px;
-        background: rgba(144, 238, 144, 0.4);
-        border: 3px dashed #228b22;
-        border-radius: 15px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-      }
-
-      .bear {
-        width: 70px;
-        height: 70px;
-        background-image: url("ursinho-contagem.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        border-radius: 50%;
-        animation: bounceIn 0.8s ease-out;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .question {
-        grid-area: question;
-        font-size: 16px;
-        color: #4b0082;
-        text-shadow: 1px 1px 0 #fff;
-      }
-
-      .options {
-        grid-area: options;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 20px;
-        width: 280px;
-        height: 280px;
-      }
-
-      .option-btn {
-        width: 100%;
-        height: 100%;
-        border: 6px solid #ff6347;
-        border-radius: 25px;
-        background: linear-gradient(145deg, #ffd700, #ffa500);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        position: relative;
-      }
-
-      .option-btn:hover {
-        transform: scale(1.05);
-      }
-
-      .option-btn.correct {
-        background: linear-gradient(145deg, #90ee90, #32cd32);
-        border-color: #228b22;
-      }
-      .option-btn.incorrect {
-        background: linear-gradient(145deg, #ffb6c1, #ff69b4);
-        border-color: #dc143c;
-      }
-
-      .feedback {
-        grid-area: feedback;
-        font-size: 13px;
-        min-height: 30px;
-        text-shadow: 1px 1px 0 #000;
-      }
-      .feedback.correct {
-        color: #228b22;
-      }
-      .feedback.incorrect {
-        color: #dc143c;
-      }
-
-      .next-btn {
-        grid-area: next;
-        font-size: 1.2em;
-        padding: 15px 30px;
-        background: linear-gradient(145deg, #87ceeb, #4682b4);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        font-weight: bold;
-      }
-
-      .celebration {
-        display: none;
-        font-size: 24px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      @keyframes bounceIn {
+      @keyframes rainbowMove {
         0% {
-          transform: scale(0);
+          background-position: 0% 50%;
         }
         50% {
-          transform: scale(1.2);
+          background-position: 100% 50%;
         }
         100% {
-          transform: scale(1);
+          background-position: 0% 50%;
         }
       }
-
-      /* Media queries mantidas para telas pequenas */
-      @media (orientation: portrait) {
-        .game-container {
-          grid-template-columns: 1fr;
-          grid-template-areas:
-            "header"
-            "score"
-            "bears"
-            "question"
-            "options"
-            "feedback"
-            "next";
-        }
-        .options {
-          width: 100%;
-          max-width: 300px;
-          height: auto;
-        }
-        .option-btn {
-          min-height: 80px;
-        }
-        .bears-area {
-          min-height: 150px;
-        }
-        .bear {
-          width: 50px;
-          height: 50px;
-        }
+      .tutoriais {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
-      @media (max-width: 480px) {
-        .game-container {
-          padding: 10px;
-        }
-        h1 {
-          font-size: 14px;
-        }
-        .bear {
-          width: 45px;
-          height: 45px;
-        }
-        .option-btn {
-          min-height: 70px;
-          border-width: 4px;
-        }
+      .botões {
+        display: inline-block;
+        margin: 10px;
+        padding: 15px 30px;
+        font-size: 16px;
+        text-decoration: none;
+        border-radius: 25px;
+        background-color: white;
+      }
+      .amarelo {
+        color: #fcb53b;
+      }
+      .vermelho {
+        color: #dc143c;
+      }
+      .azul {
+        color: #647fbc;
       }
     </style>
-  </head>
-  <body>
-    <div class="game-container">
-      <h1>🐻 Conte os Ursinhos! 🐻</h1>
-      <div class="score">Pontuação: <span id="score">0</span></div>
-      <div class="bears-area" id="bearsArea"></div>
-      <div class="question" id="question">Quantos ursinhos você vê?</div>
-      <div class="options" id="options"></div>
-      <div class="feedback" id="feedback"></div>
-      <button class="next-btn" id="nextBtn" onclick="nextRound()" disabled>
-        Próxima Pergunta
-      </button>
-      <div class="celebration" id="celebration">🎉 Parabéns! 🎉</div>
-    </div>
-
-    <script>
-      let currentBearCount = 0;
-      let score = 0;
-      let gameRound = 1;
-      let answered = false;
-
-      function generateRandomNumber(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-
-      function createBears(count) {
-        const bearsArea = document.getElementById("bearsArea");
-        bearsArea.innerHTML = "";
-        for (let i = 0; i < count; i++) {
-          setTimeout(() => {
-            const bear = document.createElement("div");
-            bear.className = "bear";
-            bearsArea.appendChild(bear);
-          }, i * 200);
-        }
-      }
-
-      function generateOptions(correctAnswer) {
-        const options = [correctAnswer];
-        const maxNumber = Math.max(10, correctAnswer + 3);
-        while (options.length < 4) {
-          const option = generateRandomNumber(1, maxNumber);
-          if (!options.includes(option)) options.push(option);
-        }
-        return options.sort(() => Math.random() - 0.5);
-      }
-
-      function createOptionButtons(options, correctAnswer) {
-        const optionsContainer = document.getElementById("options");
-        optionsContainer.innerHTML = "";
-        options.forEach((option) => {
-          const button = document.createElement("button");
-          button.className = "option-btn";
-          button.style.backgroundImage = `url('numero_${option}.png')`;
-          button.onclick = () => checkAnswer(option, correctAnswer, button);
-          optionsContainer.appendChild(button);
-        });
-      }
-
-      function checkAnswer(selectedAnswer, correctAnswer, button) {
-        if (answered) return;
-        answered = true;
-        const feedback = document.getElementById("feedback");
-        const nextBtn = document.getElementById("nextBtn");
-        const celebration = document.getElementById("celebration");
-
-        if (selectedAnswer === correctAnswer) {
-          button.classList.add("correct");
-          feedback.textContent = "Muito bem! Você acertou! 🎉";
-          feedback.className = "feedback correct";
-          score += 10;
-          document.getElementById("score").textContent = score;
-          celebration.style.display = "block";
-          setTimeout(() => (celebration.style.display = "none"), 2000);
-        } else {
-          button.classList.add("incorrect");
-          feedback.textContent = `Ops! A resposta certa era ${correctAnswer}. Tente novamente! 💪`;
-          feedback.className = "feedback incorrect";
-        }
-        nextBtn.disabled = false;
-      }
-
-      function nextRound() {
-        answered = false;
-        gameRound++;
-        let maxBears = gameRound <= 5 ? 3 : gameRound <= 10 ? 5 : 8;
-        currentBearCount = generateRandomNumber(1, maxBears);
-        createBears(currentBearCount);
-        createOptionButtons(
-          generateOptions(currentBearCount),
-          currentBearCount
-        );
-        document.getElementById("feedback").textContent = "";
-        document.getElementById("feedback").className = "feedback";
-        document.getElementById("nextBtn").disabled = true;
-      }
-
-      function startGame() {
-        score = 0;
-        gameRound = 1;
-        document.getElementById("score").textContent = score;
-        nextRound();
-      }
-
-      startGame();
-    </script>
   </body>
 </html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nível 2 - Ursinhos da Adição</title>
+
+    <!-- Fontes e estilos -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Press Start 2P", "VT323", monospace;
+        background: linear-gradient(135deg, #87ceeb, #98fb98, #ffb6c1);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .game-container {
+        width: 800px;
+        max-width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        grid-template-rows: auto auto 1fr auto auto;
+        grid-template-areas:
+          "header header"
+          "score score"
+          "bears options"
+          "question question"
+          "feedback feedback"
+          "next next";
+        gap: 15px;
+        align-items: center;
+        position: relative;
+      }
+
+      h1 {
+        grid-area: header;
+        color: #ff6b35;
+        font-size: 18px;
+        text-shadow: 2px 2px 0px #000;
+      }
+
+      .score {
+        grid-area: score;
+        font-size: 14px;
+        color: #2e8b57;
+        text-shadow: 1px 1px 0px #000;
+      }
+
+      #toggleMusic {
+        margin-left: 15px;
+        font-size: 12px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 10px;
+        background: #4682b4;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .bears-area {
+        grid-area: bears;
+        min-height: 200px;
+        background: rgba(144, 238, 144, 0.4);
+        border: 3px dashed #228b22;
+        border-radius: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .bear {
+        width: 70px;
+        height: 70px;
+        background-image: url("ursinho-contagem.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+        animation: bounceIn 0.8s ease-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .question {
+        grid-area: question;
+        font-size: 16px;
+        color: #4b0082;
+        text-shadow: 1px 1px 0 #fff;
+      }
+
+      .options {
+        grid-area: options;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 20px;
+        width: 280px;
+        height: 280px;
+      }
+
+      .option-btn {
+        width: 120px;
+        height: 120px;
+        border: none;
+        background: none;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .option-btn:hover {
+        transform: scale(1.05);
+      }
+
+      .option-btn.correct {
+        background: linear-gradient(145deg, #90ee90, #32cd32);
+      }
+
+      .option-btn.incorrect {
+        background: linear-gradient(145deg, #ffb6c1, #ff69b4);
+      }
+
+      .feedback {
+        grid-area: feedback;
+        font-size: 13px;
+        min-height: 30px;
+        text-shadow: 1px 1px 0 #000;
+      }
+
+      .feedback.correct {
+        color: #228b22;
+      }
+
+      .feedback.incorrect {
+        color: #dc143c;
+      }
+
+      .next-btn {
+        grid-area: next;
+        font-size: 1.2em;
+        padding: 15px 30px;
+        background: linear-gradient(145deg, #87ceeb, #4682b4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Ajustes mobile */
+      @media (orientation: portrait) {
+        .game-container {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "header"
+            "score"
+            "bears"
+            "question"
+            "options"
+            "feedback"
+            "next";
+        }
+        .options {
+          width: 280px;
+          height: 280px;
+          margin: 0 auto;
+        }
+        .option-btn {
+          min-height: 80px;
+        }
+        .bears-area {
+          min-height: 150px;
+        }
+        .bear {
+          width: 120px;
+          height: 120px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 14px;
+        }
+        .bear {
+          width: 45px;
+          height: 45px;
+        }
+        .option-btn {
+          min-height: 70px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>➕ Ursinhos da Adição ➕</h1>
+      <div class="score">
+        Pontuação: <span id="score">0</span>
+        <button id="toggleMusic">🔊 Música</button>
+      </div>
+
+      <!-- Ursinhos -->
+      <div class="bears-area" id="bearsArea"></div>
+
+      <div class="question" id="question">
+        Quantos ursinhos no total? 🐻➕🐻
+      </div>
+
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextRound()" disabled>
+        Próxima Pergunta
+      </button>
+    </div>
+
+    <!-- Áudios -->
+    <audio id="acertoSound">
+      <source src="sons/som-acerto.wav" type="audio/wav" />
+    </audio>
+    <audio id="erroSound">
+      <source src="sons/som-erro.wav" type="audio/wav" />
+    </audio>
+
+    <!-- Música de fundo -->
+    <audio id="musicaFundo" autoplay loop muted>
+      <source src="sons/musica-fundo.mp3" type="audio/mpeg" />
+      <source src="sons/musica-fundo.ogg" type="audio/ogg" />
+      Seu navegador não suporta áudio em HTML5.
+    </audio>
+
+    <script>
+      let score = 0;
+      let answered = false;
+      let correctAnswer = 0;
+
+      function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function createAddition() {
+        const bearsArea = document.getElementById("bearsArea");
+        bearsArea.innerHTML = "";
+
+        let a = generateRandomNumber(1, 5);
+        let b = generateRandomNumber(1, 5);
+        correctAnswer = a + b;
+
+        const groupA = document.createElement("div");
+        groupA.style.display = "flex";
+        groupA.style.margin = "10px";
+        for (let i = 0; i < a; i++) {
+          const bear = document.createElement("div");
+          bear.className = "bear";
+          groupA.appendChild(bear);
+        }
+
+        const plus = document.createElement("div");
+        plus.textContent = "+";
+        plus.style.fontSize = "40px";
+        plus.style.margin = "0 20px";
+        plus.style.color = "#4b0082";
+
+        const groupB = document.createElement("div");
+        groupB.style.display = "flex";
+        groupB.style.margin = "10px";
+        for (let i = 0; i < b; i++) {
+          const bear = document.createElement("div");
+          bear.className = "bear";
+          groupB.appendChild(bear);
+        }
+
+        bearsArea.appendChild(groupA);
+        bearsArea.appendChild(plus);
+        bearsArea.appendChild(groupB);
+
+        createOptions(correctAnswer);
+      }
+
+      function createOptions(answer) {
+        const options = [answer];
+        while (options.length < 4) {
+          let opt = generateRandomNumber(1, 10);
+          if (!options.includes(opt)) options.push(opt);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+        options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.style.backgroundImage = `url('numero_${opt}.png')`;
+          btn.onclick = () => checkAnswer(opt, btn);
+          optionsContainer.appendChild(btn);
+        });
+      }
+
+      function checkAnswer(selected, button) {
+        if (answered) return;
+        answered = true;
+
+        const feedback = document.getElementById("feedback");
+        const acertoSound = document.getElementById("acertoSound");
+        const erroSound = document.getElementById("erroSound");
+
+        if (selected === correctAnswer) {
+          button.classList.add("correct");
+          feedback.textContent = "Muito bem! Você acertou 🎉";
+          feedback.className = "feedback correct";
+          score += 10;
+          document.getElementById("score").textContent = score;
+          acertoSound.play();
+        } else {
+          button.classList.add("incorrect");
+          feedback.textContent = `Ops! A resposta era ${correctAnswer}`;
+          feedback.className = "feedback incorrect";
+          erroSound.play();
+        }
+
+        document.getElementById("nextBtn").disabled = false;
+      }
+
+      function nextRound() {
+        answered = false;
+        createAddition();
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("nextBtn").disabled = true;
+      }
+
+      // Controle da música
+      const musica = document.getElementById("musicaFundo");
+      const toggleBtn = document.getElementById("toggleMusic");
+
+      document.addEventListener(
+        "click",
+        () => {
+          if (musica.muted) {
+            musica.muted = false;
+            musica.play();
+          }
+        },
+        { once: true }
+      );
+
+      toggleBtn.addEventListener("click", () => {
+        if (musica.paused) {
+          musica.play();
+          toggleBtn.textContent = "🔊 Música";
+        } else {
+          musica.pause();
+          toggleBtn.textContent = "🔇 Música";
+        }
+      });
+
+      // Inicia jogo
+      nextRound();
+    </script>
+  </body>
+</html>
