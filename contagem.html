@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jogo de Contar Ursinhos</title>
+    <title>Último Nível: Contar Ursinhos</title>
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-      @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
-
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-
       body {
         font-family: "Press Start 2P", "VT323", monospace;
         background: linear-gradient(135deg, #87ceeb, #98fb98, #ffb6c1);
@@ -26,7 +26,6 @@
         justify-content: center;
         padding: 10px;
       }
-
       @keyframes gradientShift {
         0% {
           background-position: 0% 50%;
@@ -38,7 +37,6 @@
           background-position: 0% 50%;
         }
       }
-
       .game-container {
         width: 800px;
         max-width: 100%;
@@ -60,21 +58,18 @@
         align-items: center;
         position: relative;
       }
-
       h1 {
         grid-area: header;
         color: #ff6b35;
         font-size: 18px;
-        text-shadow: 2px 2px 0px #000;
+        text-shadow: 2px 2px 0 #000;
       }
-
       .score {
         grid-area: score;
         font-size: 14px;
         color: #2e8b57;
-        text-shadow: 1px 1px 0px #000;
+        text-shadow: 1px 1px 0 #000;
       }
-
       #toggleMusic {
         margin-left: 15px;
         font-size: 12px;
@@ -85,7 +80,6 @@
         color: #fff;
         cursor: pointer;
       }
-
       .bears-area {
         grid-area: bears;
         min-height: 200px;
@@ -98,7 +92,6 @@
         align-items: center;
         gap: 15px;
       }
-
       .bear {
         width: 70px;
         height: 70px;
@@ -110,14 +103,12 @@
         animation: bounceIn 0.8s ease-out;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
-
       .question {
         grid-area: question;
         font-size: 16px;
         color: #4b0082;
         text-shadow: 1px 1px 0 #fff;
       }
-
       .options {
         grid-area: options;
         display: grid;
@@ -127,7 +118,6 @@
         width: 280px;
         height: 280px;
       }
-
       .option-btn {
         width: 120px;
         height: 120px;
@@ -139,7 +129,6 @@
         cursor: pointer;
         transition: transform 0.2s ease;
       }
-
       .option-btn:hover {
         transform: scale(1.05);
       }
@@ -149,7 +138,6 @@
       .option-btn.incorrect {
         background: linear-gradient(145deg, #ffb6c1, #ff69b4);
       }
-
       .feedback {
         grid-area: feedback;
         font-size: 13px;
@@ -162,9 +150,8 @@
       .feedback.incorrect {
         color: #dc143c;
       }
-
       .next-btn,
-      .level-btn {
+      .credits-btn {
         grid-area: next;
         font-size: 1.2em;
         padding: 15px 30px;
@@ -174,12 +161,8 @@
         border-radius: 25px;
         cursor: pointer;
         font-weight: bold;
+        margin-top: 10px;
       }
-
-      .level-btn {
-        display: none;
-      }
-
       @keyframes bounceIn {
         0% {
           transform: scale(0);
@@ -191,211 +174,206 @@
           transform: scale(1);
         }
       }
-
-      @media (orientation: portrait) {
+      @media (max-width: 600px) {
         .game-container {
           grid-template-columns: 1fr;
-          grid-template-areas:
-            "header"
-            "score"
-            "bears"
-            "question"
-            "options"
-            "feedback"
-            "next";
+          grid-template-rows: auto auto auto auto auto auto;
+          grid-template-areas: "header" "score" "bears" "options" "question" "feedback" "next";
+          padding: 10px;
         }
-        .options {
-          width: 280px;
-          height: 280px;
-          margin: 0 auto;
-        }
-        .option-btn {
-          min-height: 80px;
-        }
-        .bears-area {
-          min-height: 150px;
-        }
-        .bear {
-          width: 120px;
-          height: 120px;
-        }
-      }
-
-      @media (max-width: 480px) {
         h1 {
           font-size: 14px;
         }
+        .score {
+          font-size: 12px;
+        }
+        .bears-area {
+          min-height: 150px;
+          gap: 10px;
+        }
         .bear {
-          width: 45px;
-          height: 45px;
+          width: 50px;
+          height: 50px;
+        }
+        .options {
+          width: 200px;
+          height: 200px;
+          gap: 10px;
+          margin: 0 auto;
         }
         .option-btn {
-          min-height: 70px;
+          width: 80px;
+          height: 80px;
+        }
+        .question {
+          font-size: 14px;
+        }
+        .next-btn,
+        .credits-btn {
+          font-size: 1em;
+          padding: 10px 20px;
         }
       }
     </style>
   </head>
   <body>
     <div class="game-container">
-      <h1>🐻 Conte os Ursinhos! 🐻</h1>
+      <h1>🐻 Ursinhos da contagem 🐻</h1>
       <div class="score">
         Pontuação: <span id="score">0</span>
         <button id="toggleMusic">🔊 Música</button>
       </div>
-
       <div class="bears-area" id="bearsArea"></div>
       <div class="question" id="question">Quantos ursinhos você vê?</div>
       <div class="options" id="options"></div>
       <div class="feedback" id="feedback"></div>
-      <button class="next-btn" id="nextBtn">Próxima Pergunta</button>
-      <button class="level-btn" id="levelBtn">
-        Ir para o Próximo Nível ➕
+      <button class="next-btn" id="nextBtn" onclick="nextRound()" disabled>
+        Próxima Pergunta
+      </button>
+      <button
+        class="credits-btn"
+        id="creditsBtn"
+        style="display: none"
+        onclick="goToNextLevel()"
+      >
+        Próxima fase
       </button>
     </div>
 
     <!-- Áudios -->
-    <audio id="bgMusic" loop>
+    <audio id="acertoSound"></audio>
+    <audio id="erroSound"></audio>
+    <audio id="spokenError"></audio>
+    <audio id="acertoExtra"></audio>
+    <audio id="roundStart"></audio>
+    <audio id="musicaFundo" autoplay loop muted>
       <source src="sons/musica-fundo.mp3" type="audio/mpeg" />
-    </audio>
-    <audio id="acertoSound">
-      <source src="sons/som-acerto.wav" type="audio/wav" />
-    </audio>
-    <audio id="erroSound">
-      <source src="sons/som-erro.wav" type="audio/wav" />
     </audio>
 
     <script>
-      let currentBearCount = 0;
-      let score = 0;
-      let gameRound = 1;
-      let answered = false;
+      let score = 0,
+        answered = false,
+        correctAnswer = 0;
 
-      const bgMusic = document.getElementById("bgMusic");
-      const toggleBtn = document.getElementById("toggleMusic");
+      const scoreEl = document.getElementById("score");
+      const feedbackEl = document.getElementById("feedback");
       const nextBtn = document.getElementById("nextBtn");
-      const levelBtn = document.getElementById("levelBtn");
-
-      nextBtn.onclick = nextRound;
+      const creditsBtn = document.getElementById("creditsBtn");
 
       function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
-      function createBears(count) {
+      function createBearsRound() {
         const bearsArea = document.getElementById("bearsArea");
         bearsArea.innerHTML = "";
-        for (let i = 0; i < count; i++) {
-          setTimeout(() => {
-            const bear = document.createElement("div");
-            bear.className = "bear";
-            bearsArea.appendChild(bear);
-          }, i * 200);
+        correctAnswer = generateRandomNumber(1, 8); // quantidade de ursinhos
+        for (let i = 0; i < correctAnswer; i++) {
+          const bear = document.createElement("div");
+          bear.className = "bear";
+          bearsArea.appendChild(bear);
         }
+        // toca som de início da rodada
+        const roundAudio = document.getElementById("roundStart");
+        roundAudio.src = "sons/contagem.opus";
+        roundAudio.play();
+
+        createOptions(correctAnswer);
+        nextBtn.disabled = true;
       }
 
-      function generateOptions(correctAnswer) {
-        const options = [correctAnswer];
-        const maxNumber = Math.max(10, correctAnswer + 3);
+      function createOptions(answer) {
+        const container = document.getElementById("options");
+        container.innerHTML = "";
+        let options = [answer];
         while (options.length < 4) {
-          const option = generateRandomNumber(1, maxNumber);
-          if (!options.includes(option)) options.push(option);
+          let opt = generateRandomNumber(1, 10);
+          if (!options.includes(opt)) options.push(opt);
         }
-        return options.sort(() => Math.random() - 0.5);
-      }
-
-      function createOptionButtons(options, correctAnswer) {
-        const optionsContainer = document.getElementById("options");
-        optionsContainer.innerHTML = "";
-        options.forEach((option) => {
-          const button = document.createElement("button");
-          button.className = "option-btn";
-          button.style.backgroundImage = `url('numero_${option}.png')`;
-          button.onclick = () => checkAnswer(option, correctAnswer, button);
-          optionsContainer.appendChild(button);
+        options.sort(() => Math.random() - 0.5);
+        options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.style.backgroundImage = `url('numero_${opt}.png')`;
+          btn.onclick = () => checkAnswer(opt, btn);
+          container.appendChild(btn);
         });
       }
 
-      function checkAnswer(selectedAnswer, correctAnswer, button) {
+      function checkAnswer(selected, btn) {
         if (answered) return;
         answered = true;
 
-        const feedback = document.getElementById("feedback");
         const acertoSound = document.getElementById("acertoSound");
         const erroSound = document.getElementById("erroSound");
+        const spokenError = document.getElementById("spokenError");
+        const acertoExtra = document.getElementById("acertoExtra");
 
-        if (selectedAnswer === correctAnswer) {
-          button.classList.add("correct");
-          feedback.textContent = "Muito bem! Você acertou! 🎉";
-          feedback.className = "feedback correct";
+        if (selected === correctAnswer) {
+          btn.classList.add("correct");
+          feedbackEl.textContent = "Muito bem! Você acertou 🎉";
+          feedbackEl.className = "feedback correct";
           score += 10;
-          document.getElementById("score").textContent = score;
+          scoreEl.textContent = score;
+          acertoSound.src = "sons/som-acerto.wav";
           acertoSound.play();
-        } else {
-          button.classList.add("incorrect");
-          feedback.textContent = `Ops! A resposta certa era ${correctAnswer}. Tente novamente! 💪`;
-          feedback.className = "feedback incorrect";
-          erroSound.play();
-        }
+          acertoExtra.src = "sons/muitobemacertou.opus";
+          acertoExtra.play();
+          nextBtn.disabled = false;
 
-        nextBtn.disabled = false;
+          if (score >= 80) {
+            // limite para terminar o nível
+            nextBtn.style.display = "none";
+            creditsBtn.style.display = "inline-block";
+            feedbackEl.textContent = "🎉 Parabéns! Você concluiu o nível! 🎉";
+          }
+        } else {
+          btn.classList.add("incorrect");
+          feedbackEl.textContent = `Ops! A resposta era ${correctAnswer}`;
+          feedbackEl.className = "feedback incorrect";
+
+          spokenError.pause();
+          spokenError.currentTime = 0;
+          spokenError.src = `sons/arespostacertaera${correctAnswer}.opus`;
+          spokenError.play();
+          nextBtn.disabled = false;
+        }
       }
 
       function nextRound() {
         answered = false;
-        gameRound++;
-
-        if (gameRound > 15) {
-          // Esconde botão de próxima pergunta e mostra botão de próximo nível
-          nextBtn.style.display = "none";
-          levelBtn.style.display = "inline-block";
-          return;
-        }
-
-        let maxBears = gameRound <= 5 ? 3 : gameRound <= 10 ? 5 : 8;
-        currentBearCount = generateRandomNumber(1, maxBears);
-        createBears(currentBearCount);
-        createOptionButtons(
-          generateOptions(currentBearCount),
-          currentBearCount
-        );
-        document.getElementById("feedback").textContent = "";
-        document.getElementById("feedback").className = "feedback";
-        nextBtn.disabled = true;
+        feedbackEl.textContent = "";
+        feedbackEl.className = "feedback";
+        createBearsRound();
       }
 
-      levelBtn.onclick = () => {
-        window.location.href = "adição.html"; // Link para próximo nível
-      };
-
-      function startGame() {
-        score = 0;
-        gameRound = 0;
-        document.getElementById("score").textContent = score;
-        nextRound();
+      function goToNextLevel() {
+        window.location.href = "adição.html";
       }
 
-      document.body.addEventListener(
+      const musica = document.getElementById("musicaFundo");
+      const toggleBtn = document.getElementById("toggleMusic");
+      document.addEventListener(
         "click",
         () => {
-          if (bgMusic.paused) {
-            bgMusic.volume = 0.3;
-            bgMusic.play();
+          if (musica.muted) {
+            musica.muted = false;
+            musica.play();
           }
         },
         { once: true }
       );
-
       toggleBtn.addEventListener("click", () => {
-        if (bgMusic.paused) {
-          bgMusic.play();
+        if (musica.paused) {
+          musica.play();
           toggleBtn.textContent = "🔊 Música";
         } else {
-          bgMusic.pause();
+          musica.pause();
           toggleBtn.textContent = "🔇 Música";
         }
       });
 
-      startGame();
+      nextRound(); // inicia a primeira rodada
     </script>
   </body>
 </html>

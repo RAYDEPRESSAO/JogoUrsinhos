@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nível 2 - Ursinhos da Adição</title>
+    <title>Último Nível - Ursinhos da Subtração</title>
 
     <link
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
@@ -174,11 +174,20 @@
           transform: scale(1);
         }
       }
+
+      /* MEDIA QUERY MOBILE */
       @media (max-width: 600px) {
         .game-container {
           grid-template-columns: 1fr;
           grid-template-rows: auto auto auto auto auto auto;
-          grid-template-areas: "header" "score" "bears" "options" "question" "feedback" "next";
+          grid-template-areas:
+            "header"
+            "score"
+            "bears"
+            "options"
+            "question"
+            "feedback"
+            "next";
           padding: 10px;
         }
         h1 {
@@ -199,6 +208,9 @@
           width: 200px;
           height: 200px;
           gap: 10px;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          justify-content: center;
           margin: 0 auto;
         }
         .option-btn {
@@ -218,14 +230,14 @@
   </head>
   <body>
     <div class="game-container">
-      <h1>➕ Ursinhos da Adição ➕</h1>
+      <h1>➖ Ursinhos da Subtração ➖</h1>
       <div class="score">
         Pontuação: <span id="score">0</span>
         <button id="toggleMusic">🔊 Música</button>
       </div>
       <div class="bears-area" id="bearsArea"></div>
       <div class="question" id="question">
-        Quantos ursinhos no total? 🐻➕🐻
+        Quantos ursinhos sobraram? 🐻➖🐻
       </div>
       <div class="options" id="options"></div>
       <div class="feedback" id="feedback"></div>
@@ -238,7 +250,7 @@
         style="display: none"
         onclick="goToCredits()"
       >
-        Próxima fase
+        Ver Créditos
       </button>
     </div>
 
@@ -255,6 +267,7 @@
     <audio id="musicaFundo" autoplay loop muted>
       <source src="sons/musica-fundo.mp3" type="audio/mpeg" />
       <source src="sons/musica-fundo.ogg" type="audio/ogg" />
+      Seu navegador não suporta áudio em HTML5.
     </audio>
 
     <script>
@@ -266,12 +279,13 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
-      function createAddition() {
+      function createSubtraction() {
         const bearsArea = document.getElementById("bearsArea");
         bearsArea.innerHTML = "";
-        let a = generateRandomNumber(1, 5);
-        let b = generateRandomNumber(1, 5);
-        correctAnswer = a + b;
+
+        let a = generateRandomNumber(2, 8);
+        let b = generateRandomNumber(1, a - 1);
+        correctAnswer = a - b;
 
         const groupA = document.createElement("div");
         groupA.style.display = "flex";
@@ -282,11 +296,11 @@
           groupA.appendChild(bear);
         }
 
-        const plus = document.createElement("div");
-        plus.textContent = "+";
-        plus.style.fontSize = "40px";
-        plus.style.margin = "0 20px";
-        plus.style.color = "#4b0082";
+        const minus = document.createElement("div");
+        minus.textContent = "−";
+        minus.style.fontSize = "40px";
+        minus.style.margin = "0 20px";
+        minus.style.color = "#4b0082";
 
         const groupB = document.createElement("div");
         groupB.style.display = "flex";
@@ -298,12 +312,12 @@
         }
 
         bearsArea.appendChild(groupA);
-        bearsArea.appendChild(plus);
+        bearsArea.appendChild(minus);
         bearsArea.appendChild(groupB);
         createOptions(correctAnswer);
 
         const roundAudio = document.getElementById("roundStart");
-        roundAudio.src = "sons/soma.opus";
+        roundAudio.src = `sons/subtração.opus`;
         roundAudio.play();
       }
 
@@ -315,14 +329,14 @@
         }
         options.sort(() => Math.random() - 0.5);
 
-        const container = document.getElementById("options");
-        container.innerHTML = "";
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
         options.forEach((opt) => {
           const btn = document.createElement("button");
           btn.className = "option-btn";
           btn.style.backgroundImage = `url('numero_${opt}.png')`;
           btn.onclick = () => checkAnswer(opt, btn);
-          container.appendChild(btn);
+          optionsContainer.appendChild(btn);
         });
       }
 
@@ -342,7 +356,7 @@
           score += 10;
           document.getElementById("score").textContent = score;
           acertoSound.play();
-          acertoExtra.src = "sons/muitobemacertou.opus";
+          acertoExtra.src = `sons/muitobemacertou.opus`;
           acertoExtra.play();
 
           if (score >= 200) {
@@ -368,12 +382,12 @@
         answered = false;
         document.getElementById("feedback").textContent = "";
         document.getElementById("feedback").className = "feedback";
-        createAddition();
+        createSubtraction();
         document.getElementById("nextBtn").disabled = true;
       }
 
       function goToCredits() {
-        window.location.href = "subtração.html";
+        window.location.href = "creditos.html";
       }
 
       const musica = document.getElementById("musicaFundo");
@@ -388,6 +402,7 @@
         },
         { once: true }
       );
+
       toggleBtn.addEventListener("click", () => {
         if (musica.paused) {
           musica.play();
@@ -398,7 +413,9 @@
         }
       });
 
-      nextRound();
+      document.addEventListener("DOMContentLoaded", () => {
+        nextRound();
+      });
     </script>
   </body>
 </html>
