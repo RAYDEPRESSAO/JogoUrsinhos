@@ -12,6 +12,12 @@
       </h1>
       <img src="ursinho-contagem.png" alt="ursinho" />
     </main>
+    <audio
+      id="bg-music"
+      src="sons/We Are The Champions (Remastered 2011).mp3"
+      autoplay
+      loop
+    ></audio>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
       html,
@@ -106,5 +112,18 @@
         color: #647fbc;
       }
     </style>
+    <script>
+      const musica = document.getElementById("bg-music");
+      musica.volume = 0.5;
+
+      // espera o clique do usuário para tocar
+      document.body.addEventListener(
+        "click",
+        () => {
+          musica.play();
+        },
+        { once: true }
+      );
+    </script>
   </body>
 </html>
